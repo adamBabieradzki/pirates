@@ -3,6 +3,7 @@ import game.config as config
 from game.display import announce
 from game.events import *
 import game.items as items
+import game.locations.adamB_utils.town_locs as shops
 
 class Flags:
     knowledge_flag = False
@@ -24,9 +25,9 @@ class Settled_Island(location.Location):
         self.locations["inland_settlement"] = None #Add sublocation obj here
         #might make a seperate import for these locations
         self.locations["town"] = Town(self)
-        self.locations["tavern"] = None #Add sublocation obj here
-        self.locations["casino"] = None #Add sublocation obj here
-        self.locations["store"] = None #Add sublocation obj here
+        self.locations["tavern"] = shops.Tavern(self) #Add sublocation obj here
+        self.locations["casino"] = shops.Casino(self) #Add sublocation obj here
+        self.locations["store"] = shops.Casino(self) #Add sublocation obj here
 
     def enter(self,ship):
         print("You Arrive at the settled island")
@@ -104,16 +105,18 @@ class Town(location.SubLocation):
         self.verbs['tavern'] = self
         #non-go verbs
         self.verbs['talk'] = self
-
+        #need to add more stuff here
+    def enter(self):
+        announce("You step into town concisting of cobbled roads and small buildings")
     def process_verb(self, verb, cmd_list, nouns):
-        if verb == 'south':
-            announce("you return to the wharf")
+        print(verb)
+        if verb =='south':
             config.the_player.next_loc = self.main_location.locations['wharf']
         elif verb == 'casino':
-            announce("you try to enter the casino")
+            config.the_player.next_loc = self.main_location.locations['casino']
         elif verb == 'store':
-            announce("you try to enter the store")
+            config.the_player.next_loc = self.main_location.locations['store']
         elif verb == 'tavern':
-            announce("You try to enter the tavern")
+            config.the_player.next_loc = self.main_location.locations['tavern']
         elif verb == "talk":
             announce("There is nobody arround")
