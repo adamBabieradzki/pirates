@@ -3,6 +3,7 @@ import game.config as config
 from game.display import announce
 from game.events import *
 import game.items as items
+import game.locations.adamB_utils.mini_game as blackjack
 
 class Casino(location.SubLocation):
     def __init__(self,m):
@@ -21,7 +22,8 @@ class Casino(location.SubLocation):
         elif verb == 'talk':
             pass
         elif verb == 'gamble':
-            pass
+            game = blackjack.Game()
+            game.play_game()
 
 class Store(location.SubLocation):
     def __init__(self,m):
