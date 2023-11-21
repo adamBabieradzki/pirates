@@ -9,6 +9,8 @@ class Casino(location.SubLocation):
         super().__init__(m)
         self.name = "casino"
         self.verbs['town'] = self
+        self.verbs['talk'] = self
+        self.verbs['gamble'] = self
 
     def enter(self):
         announce("You walk into a casino that looks more like someone's parlor room. ")    
@@ -16,6 +18,10 @@ class Casino(location.SubLocation):
     def process_verb (self,verb,cmd_list, nouns):
         if verb == "town":
             config.the_player.next_loc = self.main_location.locations["town"]
+        elif verb == 'talk':
+            pass
+        elif verb == 'gamble':
+            pass
 
 class Store(location.SubLocation):
     def __init__(self,m):

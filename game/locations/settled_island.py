@@ -10,6 +10,7 @@ class Flags:
     map_flag = False
     supply_flag = False
     quest_flag = False
+
 class Settled_Island(location.Location):
     def __init__(self,x,y,w):
         super().__init__(x,y,w)
@@ -25,9 +26,9 @@ class Settled_Island(location.Location):
         self.locations["inland_settlement"] = None #Add sublocation obj here
         #might make a seperate import for these locations
         self.locations["town"] = Town(self)
-        self.locations["tavern"] = shops.Tavern(self) #Add sublocation obj here
-        self.locations["casino"] = shops.Casino(self) #Add sublocation obj here
-        self.locations["store"] = shops.Casino(self) #Add sublocation obj here
+        self.locations["tavern"] = shops.Tavern(self)
+        self.locations["casino"] = shops.Casino(self) 
+        self.locations["store"] = shops.Store(self) 
 
     def enter(self,ship):
         print("You Arrive at the settled island")
