@@ -12,6 +12,8 @@ class Casino(location.SubLocation):
         self.verbs['town'] = self
         self.verbs['talk'] = self
         self.verbs['gamble'] = self
+        self.wincount = 0
+        self.flag = False
 
     def enter(self):
         announce("You walk into a casino that looks more like someone's parlor room. ")    
@@ -23,7 +25,13 @@ class Casino(location.SubLocation):
             pass
         elif verb == 'gamble':
             game = blackjack.Game()
-            game.play_game()
+            while input("Dealer: Would you like me to deal you in? (y/n)") in ("y","Y","yes","Yes"):
+                self.wincount += game.play_game()
+                print(self.wincount)
+                if self.wincount >= 5 and self.flag == False:
+                    announce("Dealer: You've been winning a lot of games, how about I pay you in the form of an IOU to the clerk next door \n the owed me a favor from a while back")
+                    self.flag = True
+                    break
 
 class Store(location.SubLocation):
     def __init__(self,m):

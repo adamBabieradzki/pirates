@@ -1,4 +1,3 @@
-import config
 import random
 
 
@@ -101,11 +100,11 @@ class Game:
                     print(f"Final Hand Score is {self.player_hand[1]}")
                     stand = True
                     break
-            while self.dealer_hand[1] < 16:
+            while self.dealer_hand[1] <= 16:
                 self.draw(2,1)
                 self.printout()
                 if self.dealer_hand[1] > 21:
-                    win_flag = "player"
+                    if win_flag == None: win_flag = "player"
                     break
             if self.player_hand[1] > self.dealer_hand[1]:
                 if win_flag == None: win_flag = "player"
