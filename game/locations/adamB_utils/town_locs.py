@@ -9,11 +9,12 @@ import game.locations.adamB_utils.dialog as dialog
 class Casino(location.SubLocation):
     def __init__(self,m):
         super().__init__(m)
-        self.talk = dialog.Casino()
+        self.talk = dialog.Casino(self)
         self.name = "casino"
         self.verbs['town'] = self
         self.verbs['talk'] = self
         self.verbs['gamble'] = self
+        self.chips = 0
         self.wincount = 0
         self.flag = False
 
@@ -27,13 +28,21 @@ class Casino(location.SubLocation):
             self.talk.talk()
         elif verb == 'gamble':
             game = blackjack.Game()
-            while input("Dealer: Would you like me to deal you in? (y/n)") in ("y","Y","yes","Yes"):
-                if game.play_game() == "player": self.wincount += 1
-                print(self.wincount)
-                if self.wincount >= 5 and self.flag == False:
-                    announce("Dealer: You've been winning a lot of games, how about I pay you in the form of an IOU to the clerk next door \n the owed me a favor from a while back")
-                    self.flag = True
-                    break
+            if self.chips > 0:
+                while input("Dealer: Would you like me to deal you in? (y/n)") in ("y","Y","yes","Yes"):
+                    announce(f'You have {self.chips} chips.')
+                    if game.play_game() == "player": 
+                        self.wincount += 1
+                        self.chips += 1
+                    else:
+                        self.chips -= 1
+                    print(self.wincount)
+                    if self.wincount >= 5 and self.flag == False:
+                        announce("Dealer: You've been winning a lot of games, how about I pay you in the form of an IOU to the clerk next door \n the owed me a favor from a while back")
+                        self.flag = True
+                        break
+            else:
+                announce("If you don't have any chips talk to the dealer!")
 
 class Store(location.SubLocation):
     def __init__(self,m):

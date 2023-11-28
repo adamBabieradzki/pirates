@@ -52,13 +52,18 @@ class Game:
     def draw(self,target,n=1):
         for i in range(n):
             card = self.deck.draw()
-            if card.face == "A":
+            if card.face == "A" and target == 1:
                 ace_val = None
                 while ace_val == None:
                     declare = int(input("You drew an Ace, do you declare 11 or 1:"))
                     if declare == 11 or declare == 1:
                         ace_val = declare
                 card.declare_ace(ace_val)
+            elif card.face == "A" and target == 2:
+                if self.target(target)[1] > 10: 
+                    card.declare_ace(1)
+                else: 
+                    card.declare_ace(11)
             self.target(target)[0].append(card)
             self.target(target)[1] += card.value
     def printout(self):
