@@ -73,6 +73,8 @@ class Game:
         print(f'Your Hand: {handstring1}')
         print(f'Dealers Hand: {handstring2}')
     def play_game(self):
+        self.player_hand = [[],0]
+        self.dealer_hand = [[],0]
         self.draw(1,2)
         self.draw(2,2) #player and dealer get 2 cards each
         self.printout()
