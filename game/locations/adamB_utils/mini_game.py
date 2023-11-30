@@ -55,7 +55,13 @@ class Game:
             if card.face == "A" and target == 1:
                 ace_val = None
                 while ace_val == None:
-                    declare = int(input("You drew an Ace, do you declare 11 or 1:"))
+                    while True:
+                        try:
+                            declare = int(input("You drew an Ace, do you declare 11 or 1:"))
+                        except:
+                            continue
+                        else:
+                            break
                     if declare == 11 or declare == 1:
                         ace_val = declare
                 card.declare_ace(ace_val)

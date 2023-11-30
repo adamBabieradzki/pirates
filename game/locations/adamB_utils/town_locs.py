@@ -28,9 +28,9 @@ class Casino(location.SubLocation):
             self.talk.talk()
         elif verb == 'gamble':
             game = blackjack.Game()
+            announce(f'You have {self.chips} chips.')
             if self.chips > 0:
-                while input("Dealer: Would you like me to deal you in? (y/n)") in ("y","Y","yes","Yes"):
-                    announce(f'You have {self.chips} chips.')
+                while input("Dealer: Would you like me to deal you in? (y/n)") in ("y","Y","yes","Yes") and self.chips > 0:
                     if game.play_game() == "player": 
                         self.wincount += 1
                         self.chips += 1
@@ -43,12 +43,17 @@ class Casino(location.SubLocation):
                         break
             else:
                 announce("If you don't have any chips talk to the dealer!")
+        
 
 class Store(location.SubLocation):
     def __init__(self,m):
         super().__init__(m)
         self.name = "store"
         self.verbs['town'] = self
+        self.verbs['buy'] = self
+        self.verbs['sell'] = self
+        self.verbs['talk'] = self
+        self.flag = False
 
     def enter(self):
         announce("A friendly looking clerk greets you as you enter the general store. ")
@@ -56,7 +61,13 @@ class Store(location.SubLocation):
     def process_verb (self,verb,cmd_list, nouns):
         if verb == "town":
             config.the_player.next_loc = self.main_location.locations["town"]
-
+        elif verb == "buy":
+            pass
+        elif verb == "sell":
+            pass
+        elif verb == "talk":
+            pass
+        
 class Tavern(location.SubLocation):
     def __init__(self,m):
         super().__init__(m)

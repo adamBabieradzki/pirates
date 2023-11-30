@@ -4,6 +4,7 @@ from game.display import announce
 from game.events import *
 import game.items as items
 import game.locations.adamB_utils.town_locs as shops
+import game.locations.adamB_utils.adams_items as ab_items
 
 class Flags:
     knowledge_flag = False
@@ -109,6 +110,9 @@ class Town(location.SubLocation):
         #need to add more stuff here
     def enter(self):
         announce("You step into town concisting of cobbled roads and small buildings")
+        #check flags from town
+        Flags.knowledge_flag = True if self.main_location.locations['casino'].flag else False
+        
     def process_verb(self, verb, cmd_list, nouns):
         print(verb)
         if verb =='south':
