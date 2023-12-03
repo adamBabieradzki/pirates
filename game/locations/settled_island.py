@@ -112,9 +112,14 @@ class Town(location.SubLocation):
         announce("You step into town concisting of cobbled roads and small buildings")
         #check flags from town
         Flags.knowledge_flag = True if self.main_location.locations['casino'].flag else False
-        print(f'Knowledge Flag: {Flags.knowledge_flag}')
-        Flags.supply_flag = True if ab_items.equipment in config.the_player.inventory else False
-        print(f'Supply Flag:  {Flags.supply_flag}')
+        for i in config.the_player.inventory:
+            if isinstance(i,ab_items.equipment):
+                Flags.supply_flag == True
+            else:
+                Flags.supply_flag == False
+        print(f'Supply Flag:  {Flags.supply_flag}')     #debug code
+        print(f'Knowledge Flag: {Flags.knowledge_flag}')#debug code
+
 
     def process_verb(self, verb, cmd_list, nouns):
         print(verb)

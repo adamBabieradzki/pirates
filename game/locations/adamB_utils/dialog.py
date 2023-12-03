@@ -44,3 +44,43 @@ class Casino:
             else:
                 self.popable_list = list(self.small_talk_list)
                 announce(self.popable_list.pop(random.randint(0,len(self.popable_list)-1)))
+
+class Shop:
+    def __init__(self,other):
+        self.other = other
+        self.first_time = True
+        self.hint = True
+    def talk(self):
+        if self.first_time:
+            self.first_time = False
+            announce() #first time text
+        elif config.the_player.shillings < 200 and self.hint:
+            self.hint = False
+            announce("Shopkeep: Your pockets seem a little light, I would suggest checking in the tavern if there's any work available.")
+        else:
+            announce("Shopkeep: I promise my inventory is usually better, but the lack of regular shipments have")
+
+
+class Person:
+    def __init__(self,name,job,intro,small_talk,hint,flag,ask):
+        self.name = name
+        self.job = job
+        self.flags = {"met": False,"hint":False,"ask":False}
+        self.introduction = intro
+        self.small_talk = small_talk
+        self.hint = hint
+        self.flag = flag
+        self.ask = ask
+    def talk(self):
+        if not self.flags['met']:
+            #string for meeting for the first time
+            pass
+
+class Tavern:
+    def __init__(self,other):
+        self.other = other
+        self.first_time = True
+    def talk(self,target=None):
+        if target == None:
+            pass #talk with the barkeep & all patrons
+        

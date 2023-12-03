@@ -34,3 +34,28 @@ class Buy():
 class Sell():
     def __init__(self):
         pass
+
+    def display(self):
+        print("You can sell: ")
+        iterator = 1 
+        for i in config.the_player.inventory:
+            print(f'{iterator}: {i} for {i.getValue()} shillings')
+            iterator += 1
+    
+    def sell_item(self,item):
+        if isinstance(item,int):
+            if item > 0 and item <= len(config.the_player.inventory):
+                confirm = input(f'Are you sure you want to sell {config.the_player.inventory[item-1]}? Type yes to confirm: ')
+                if confirm == 'yes' or confirm == 'Yes' or confirm == 'y':
+                    config.the_player.shillings += config.the_player.inventory[item-1].getValue()
+                    config.the_player.inventory.pop(item-1)
+            else:
+                announce("Shopkeep: Can't sell something you don't have")
+        else:
+            announce("Please use the item number from the list above.")
+    
+    def sell_sequence(self):
+        self.display()
+        item = int(input("Which number item would you like to sell: "))
+        self.sell_item(item)
+

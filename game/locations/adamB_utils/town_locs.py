@@ -52,27 +52,30 @@ class Casino(location.SubLocation):
 class Store(location.SubLocation):
     def __init__(self,m):
         super().__init__(m)
+        self.talk = dialog.Shop(self)
         self.name = "store"
         self.verbs['town'] = self
         self.verbs['buy'] = self
         self.buy_class = barter.Buy()
+        self.sell_class = barter.Sell()
         self.verbs['sell'] = self
         self.verbs['talk'] = self
         self.flag = False
 
     def enter(self):
         announce("A friendly looking clerk greets you as you enter the general store. ")
-        config.the_player.shillings += 1000
+        config.the_player.shillings += 1000 #this is test code please delete
 
     def process_verb (self,verb,cmd_list, nouns):
         if verb == "town":
+            announce("You return to town.")
             config.the_player.next_loc = self.main_location.locations["town"]
         elif verb == "buy":
             self.buy_class.buy_sequence()
         elif verb == "sell":
-            pass
+            self.sell_class.sell_sequence()
         elif verb == "talk":
-            pass
+            self.talk.talk()
         
 class Tavern(location.SubLocation):
     def __init__(self,m):
@@ -86,3 +89,9 @@ class Tavern(location.SubLocation):
     def process_verb (self,verb,cmd_list, nouns):
         if verb == "town":
             config.the_player.next_loc = self.main_location.locations["town"]
+            announce("You return to town.")
+        if verb == "talk":
+            if len(cmd_list) == 1: #talk generally
+                pass
+            if len(cmd_list) == 2: #talk to a specific person
+                pass
