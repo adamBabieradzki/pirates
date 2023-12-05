@@ -64,7 +64,7 @@ class Store(location.SubLocation):
 
     def enter(self):
         announce("A friendly looking clerk greets you as you enter the general store. ")
-        config.the_player.shillings += 1000 #this is test code please delete
+        config.the_player.shillings += 1000 #debug code
 
     def process_verb (self,verb,cmd_list, nouns):
         if verb == "town":

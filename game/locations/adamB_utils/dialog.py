@@ -61,26 +61,26 @@ class Shop:
             announce("Shopkeep: I promise my inventory is usually better, but the lack of regular shipments have")
 
 
-class Person:
-    def __init__(self,name,job,intro,small_talk,hint,flag,ask):
-        self.name = name
-        self.job = job
-        self.flags = {"met": False,"hint":False,"ask":False}
-        self.introduction = intro
-        self.small_talk = small_talk
-        self.hint = hint
-        self.flag = flag
-        self.ask = ask
-    def talk(self):
-        if not self.flags['met']:
-            #string for meeting for the first time
-            pass
-
 class Tavern:
     def __init__(self,other):
         self.other = other
-        self.first_time = True
+        self.person1_first_time = True
+        self.person2_first_time = True
     def talk(self,target=None):
         if target == None:
-            pass #talk with the barkeep & all patrons
+            announce("Barkeep: Welcome, can I get you anything to eat or perhaps a drink?\nThere only seems to be one other patron in the tavern")
+        if target == "Barkeep":
+            if self.person1_first_time:
+                announce("Barkeep: It's been a while since someone arrived to this backwater island especially a pirate\nunfortunatly you won't find much loot around here")
+                self.person1_first_time = False
+            else:
+                announce("Barkeep: The other person in here?, oh that's the old foreman for the inland camp, one of the few who made it out unharmed.")
+        if target == "Foreman":
+            if self.person2_first_time:
+                announce("Foreman: I used to run the lumber mill further inland, the mill is overgrown and many of the workers are dead or have left the island\nI could't imagine why anyone would want to return to that god forsake place")
+                self.person2_first_time = False
+            else:
+                announce("After some convincing the foreman agrees to tell you how to get to the camp\nForeman: If you incist on making your way to the camp then I won't stop you, but I will warn you that all who atempted it havn't returned."+
+                         "\nOn a tattered piece of parchment the foreman scribbles a rough map of the island, which shows all of the paths leading to the mill.")
+                
         

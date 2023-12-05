@@ -114,11 +114,16 @@ class Town(location.SubLocation):
         Flags.knowledge_flag = True if self.main_location.locations['casino'].flag else False
         for i in config.the_player.inventory:
             if isinstance(i,ab_items.equipment):
-                Flags.supply_flag == True
+                Flags.supply_flag = True
             else:
-                Flags.supply_flag == False
+                Flags.supply_flag = False
+            if isinstance(i,ab_items.map):
+                Flags.map_flag = True
+            else:
+                Flags.map_flag = False
         print(f'Supply Flag:  {Flags.supply_flag}')     #debug code
         print(f'Knowledge Flag: {Flags.knowledge_flag}')#debug code
+        print(f'Knowledge Flag: {Flags.map_flag}') #debug code
 
 
     def process_verb(self, verb, cmd_list, nouns):
@@ -133,3 +138,33 @@ class Town(location.SubLocation):
             config.the_player.next_loc = self.main_location.locations['tavern']
         elif verb == "talk":
             announce("There is nobody arround")
+
+class Beach(location.SubLocation):
+    def __init__(self,m):
+        super().__init__(m)
+    
+    def enter():
+        pass
+
+    def process_verb(self, verb, cmd_list, nouns):
+        pass
+
+class Jungle(location.SubLocation):
+    def __init__(self,m):
+        super().__init__(m)
+    
+    def enter():
+        pass
+
+    def process_verb(self, verb, cmd_list, nouns):
+        pass
+
+class Settlement(location.SubLocation):
+    def __init__(self,m):
+        super().__init__(m)
+    
+    def enter():
+        pass
+
+    def process_verb(self, verb, cmd_list, nouns):
+        pass

@@ -46,7 +46,7 @@ class Sell():
         if isinstance(item,int):
             if item > 0 and item <= len(config.the_player.inventory):
                 confirm = input(f'Are you sure you want to sell {config.the_player.inventory[item-1]}? Type yes to confirm: ')
-                if confirm == 'yes' or confirm == 'Yes' or confirm == 'y':
+                if confirm == 'yes' or confirm == 'Yes' or confirm == 'y' and not isinstance(config.the_player.inventory[item-1],a_items.map):
                     config.the_player.shillings += config.the_player.inventory[item-1].getValue()
                     config.the_player.inventory.pop(item-1)
             else:
