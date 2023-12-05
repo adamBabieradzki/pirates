@@ -56,7 +56,7 @@ class Shop:
             announce() #first time text
         elif config.the_player.shillings < 200 and self.hint:
             self.hint = False
-            announce("Shopkeep: Your pockets seem a little light, I would suggest checking in the tavern if there's any work available.")
+            announce("Shopkeep: Your pockets seem a little light, I would suggest gathering materials around the island.")
         else:
             announce("Shopkeep: I promise my inventory is usually better, but the lack of regular shipments have")
 
@@ -66,21 +66,32 @@ class Tavern:
         self.other = other
         self.person1_first_time = True
         self.person2_first_time = True
+        self.people = ["barkeep"]
     def talk(self,target=None):
         if target == None:
             announce("Barkeep: Welcome, can I get you anything to eat or perhaps a drink?\nThere only seems to be one other patron in the tavern")
-        if target == "Barkeep":
+        if target == "barkeep":
             if self.person1_first_time:
                 announce("Barkeep: It's been a while since someone arrived to this backwater island especially a pirate\nunfortunatly you won't find much loot around here")
                 self.person1_first_time = False
             else:
-                announce("Barkeep: The other person in here?, oh that's the old foreman for the inland camp, one of the few who made it out unharmed.")
-        if target == "Foreman":
+                announce("Barkeep: The other person in here?, oh that's the old foreman for the logging camp, one of the few who made it out unharmed.")
+                self.people.append("foreman")
+        if target == "foreman":
             if self.person2_first_time:
-                announce("Foreman: I used to run the lumber mill further inland, the mill is overgrown and many of the workers are dead or have left the island\nI could't imagine why anyone would want to return to that god forsake place")
+                announce("Foreman: I used to run the logging camp further inland, the camp is overgrown and many of the workers are dead or have left the island\nI could't imagine why anyone would want to return to that god forsake place")
                 self.person2_first_time = False
-            else:
-                announce("After some convincing the foreman agrees to tell you how to get to the camp\nForeman: If you incist on making your way to the camp then I won't stop you, but I will warn you that all who atempted it havn't returned."+
-                         "\nOn a tattered piece of parchment the foreman scribbles a rough map of the island, which shows all of the paths leading to the mill.")
+            else:   
+                has_flag = False
+                for i in config.the_player.inventory:
+                    if isinstance(i,items.map):
+                        has_flag = True
+                        
+                if not has_flag:
+                    announce("After some convincing the foreman agrees to tell you how to get to the camp\nForeman: If you incist on making your way to the camp then I won't stop you, but I will warn you that all who atempted it havn't returned.")
+                    print("On a tattered piece of parchment the foreman scribbles a rough map of the island, which shows all of the paths leading to the camp.")
+                    config.the_player.inventory.append(items.map())
+                else:
+                    announce("Foreman: Don't get yourself killed out there.")
                 
         

@@ -80,9 +80,11 @@ class Store(location.SubLocation):
 class Tavern(location.SubLocation):
     def __init__(self,m):
         super().__init__(m)
+        self.talk = dialog.Tavern(self)
         self.name = "store"
         self.verbs['town'] = self
-
+        self.verbs['talk'] = self
+ 
     def enter(self):
         announce("You take a seat at a round table towards the front, the owner of the tavern approaches you from accross the room. ")
 
@@ -92,6 +94,9 @@ class Tavern(location.SubLocation):
             announce("You return to town.")
         if verb == "talk":
             if len(cmd_list) == 1: #talk generally
-                pass
-            if len(cmd_list) == 2: #talk to a specific person
-                pass
+                self.talk.talk(None)
+            if len(cmd_list) == 2:
+                if cmd_list[1] in self.talk.people:
+                    self.talk.talk(cmd_list[1])
+                else:
+                    announce("That person isn't here")

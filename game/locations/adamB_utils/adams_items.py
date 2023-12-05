@@ -7,3 +7,8 @@ class equipment(items.Item):
 class map(items.Item):
     def __init__(self):
         super().__init__('Tattered Map',0)
+
+class jungle_fruits(items.Item):
+    def __init__(self):
+        super().__init__("Jungle Fruits",20)
+        self.verb = 'eat'

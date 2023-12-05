@@ -5,6 +5,7 @@ from game.events import *
 import game.items as items
 import game.locations.adamB_utils.town_locs as shops
 import game.locations.adamB_utils.adams_items as ab_items
+import random
 
 class Flags:
     knowledge_flag = False
@@ -22,9 +23,9 @@ class Settled_Island(location.Location):
         self.locations = {}
         self.locations["docks"] = self.starting_location
         self.locations["wharf"] = Wharf(self)
-        self.locations["beach"] = None #Add sublocation obj here
-        self.locations["jungle"] = None #Add sublocation obj here
-        self.locations["inland_settlement"] = None #Add sublocation obj here
+        self.locations["beach"] = Beach(self) 
+        self.locations["jungle"] = Jungle(self) 
+        self.locations["lumber camp"] = Lumber_camp(self) 
         #might make a seperate import for these locations
         self.locations["town"] = Town(self)
         self.locations["tavern"] = shops.Tavern(self)
@@ -142,24 +143,64 @@ class Town(location.SubLocation):
 class Beach(location.SubLocation):
     def __init__(self,m):
         super().__init__(m)
-    
+        #navigation verbs
+        self.verbs['east'] = self
+        self.verbs['west'] = self
+        self.verbs['north'] = self
+        #foraging verbs
+        self.verbs['fish'] = self
+        self.verbs['forage'] = self
+
     def enter():
-        pass
+        announce("You step foot upon a beach, to your north is a jungle")
 
     def process_verb(self, verb, cmd_list, nouns):
-        pass
+        if verb == "east" or verb =="west":
+            config.the_player.next_loc = self.main_location.locations['docks']
+        elif verb == "north":
+            config.the_player.next_loc = self.main_location.locations['jungle']
+        elif verb == "fish":
+            pass
+            #this code is for fishing, might be a minigame idk
+        elif verb =="forage":
+            pass
+            #this code is for foraging the beach, source of income, but finite resources available.
+        
 
 class Jungle(location.SubLocation):
     def __init__(self,m):
         super().__init__(m)
-    
+        self.verbs['north'] = self
+        self.verbs['south'] = self
+
+        self.verbs['explore'] = self
+        self.verbs['forage'] = self
     def enter():
-        pass
+        announce("You step foot into a dense jungle, any trace of human activity has been wiped away")
 
     def process_verb(self, verb, cmd_list, nouns):
-        pass
-
-class Settlement(location.SubLocation):
+        if verb == "north":
+            if Flags.knowledge_flag and Flags.map_flag and Flags.supply_flag:
+                config.the_player.next_loc = self.main_location.locations['lumber camp']
+            elif Flags.knowledge_flag and Flags.map_flag:
+                announce("You follow the designated trails but the foliage proves to be too challenging, you are forced to turn back before reaching your destination.")
+                event_dice = random.randint(1,10)
+                #implement some events to happen when failing to navigate jungle
+            elif Flags.knowledge_flag and Flags.supply_flag:
+                announce("You cut through the folliage in search of the lumber camp but the jungle proves too difficult to navigate and you wander in a big circle.")
+                event_dice = random.randint(1,10)
+                #implement some events to happen when failing to find camp
+            else:
+                announce("Your lack of tools and knowledge make it impossible to find the lumber camp.")
+                event_dice = random.randint(1,10)
+                #implement some events to happen when failing to find camp
+        elif verb == "south":
+            config.the_player.next_loc = self.main_location.locations['beach']
+        elif verb == "explore":
+            pass
+        elif verb == "forage":
+            pass
+class Lumber_camp(location.SubLocation):
     def __init__(self,m):
         super().__init__(m)
     
