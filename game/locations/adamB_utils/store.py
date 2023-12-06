@@ -56,6 +56,10 @@ class Sell():
     
     def sell_sequence(self):
         self.display()
-        item = int(input("Which number item would you like to sell: "))
-        self.sell_item(item)
+        try:
+            item = int(input("Which number item would you like to sell: "))
+        except:
+            announce("Please use a number from the list.")
+        else:
+            self.sell_item(item)
 

@@ -36,7 +36,7 @@ class Deck:
             return self.content.pop()
         else:
             self.shuffle()
-            self.draw()
+            return self.draw()
         
 
 class Game:

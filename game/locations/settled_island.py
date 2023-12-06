@@ -6,6 +6,7 @@ import game.items as items
 import game.locations.adamB_utils.town_locs as shops
 import game.locations.adamB_utils.adams_items as ab_items
 import random
+from game.events.adamB_events import *
 
 class Flags:
     knowledge_flag = False
@@ -51,7 +52,7 @@ class Docks (location.SubLocation):
         self.event_chance = 0
 
     def enter(self):
-        announce("You dock your ship at the docks")
+        announce("You step upon the docks")
     
     def process_verb (self,verb,cmd_list, nouns):
         if verb == "south":
@@ -74,14 +75,12 @@ class Wharf (location.SubLocation):
         self.verbs['repair'] = self
         
     def enter(self):
-        announce("You walk up to a small wharf \n On the wharf is a stranded merchant and a shipwright")
+        announce("You walk to the small wharf \n On the wharf is a stranded merchant and a shipwright")
     
     def process_verb (self,verb,cmd_list,nouns):
         if verb == "south":
-            announce("You wander back to the docks.")
             config.the_player.next_loc = self.main_location.locations["docks"]
         elif verb == "north":
-            announce("You walk north of the dock into town")
             config.the_player.next_loc = self.main_location.locations["town"]
         elif verb == "talk":
             if len(cmd_list) == 1:
@@ -113,18 +112,21 @@ class Town(location.SubLocation):
         announce("You step into town concisting of cobbled roads and small buildings")
         #check flags from town
         Flags.knowledge_flag = True if self.main_location.locations['casino'].flag else False
-        for i in config.the_player.inventory:
-            if isinstance(i,ab_items.equipment):
-                Flags.supply_flag = True
-            else:
-                Flags.supply_flag = False
-            if isinstance(i,ab_items.map):
-                Flags.map_flag = True
-            else:
-                Flags.map_flag = False
+        Flags.supply_flag = True if self.check_flags(config.the_player.inventory)[0] else False
+        Flags.map_flag = True if self.check_flags(config.the_player.inventory)[1] else False
+
         print(f'Supply Flag:  {Flags.supply_flag}')     #debug code
         print(f'Knowledge Flag: {Flags.knowledge_flag}')#debug code
-        print(f'Knowledge Flag: {Flags.map_flag}') #debug code
+        print(f'Map Flag: {Flags.map_flag}') #debug code
+
+    def check_flags(self,inv):
+        return_list = [False,False]
+        for item in inv:
+            if isinstance(item,ab_items.equipment):
+                return_list[0] = True
+            if isinstance(item,ab_items.map):
+                return_list[1] = True
+        return return_list
 
 
     def process_verb(self, verb, cmd_list, nouns):
@@ -151,7 +153,7 @@ class Beach(location.SubLocation):
         self.verbs['fish'] = self
         self.verbs['forage'] = self
 
-    def enter():
+    def enter(self):
         announce("You step foot upon a beach, to your north is a jungle")
 
     def process_verb(self, verb, cmd_list, nouns):
@@ -172,13 +174,17 @@ class Jungle(location.SubLocation):
         super().__init__(m)
         self.verbs['north'] = self
         self.verbs['south'] = self
-
-        self.verbs['explore'] = self
+        self.verbs['shortcut'] = self
         self.verbs['forage'] = self
-    def enter():
+        self.event_chance = 100
+        self.events.append(jungle_fruit.Fruit())
+        self.events.append(animal_encounter.Tiger_fight())
+    def enter(self):
         announce("You step foot into a dense jungle, any trace of human activity has been wiped away")
 
     def process_verb(self, verb, cmd_list, nouns):
+        if verb == "shortcut":
+            config.the_player.next_loc = self.main_location.locations['lumber camp']#debug code
         if verb == "north":
             if Flags.knowledge_flag and Flags.map_flag and Flags.supply_flag:
                 config.the_player.next_loc = self.main_location.locations['lumber camp']
@@ -196,16 +202,30 @@ class Jungle(location.SubLocation):
                 #implement some events to happen when failing to find camp
         elif verb == "south":
             config.the_player.next_loc = self.main_location.locations['beach']
-        elif verb == "explore":
-            pass
         elif verb == "forage":
             pass
 class Lumber_camp(location.SubLocation):
     def __init__(self,m):
         super().__init__(m)
-    
-    def enter():
-        pass
+        self.verbs['south'] = self
+        self.event_chance = 100
+        self.events.append(boss_fight.Boss_Fight())
 
+    def enter(self):
+        if not isinstance(self.events[0],boss_fight.Boss_Fight):
+            self.event_chance = 0
+            Flags.quest_flag = True
+            print("You have completed the quest") #debug code
+        
+        if Flags.quest_flag == False:
+            announce("You make your way through the thck folliage into where the logging camp once was, to your suprise you find moving, sentient plants.\n They turn to face you and strike")
+        elif Flags.quest_flag == True:
+            announce("You enter the damaged logging camp, it will take some time before it's operational again.")
+
+    def check_completion(self):
+        if not isinstance(self.events[0], boss_fight.Boss_Fight):
+            Flags.quest_flag = True
+            print("quest flag set") #debug code
     def process_verb(self, verb, cmd_list, nouns):
-        pass
+        if verb == "south":
+            config.the_player.next_loc = self.main_location.locations['jungle']
