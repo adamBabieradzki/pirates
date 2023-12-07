@@ -20,7 +20,7 @@ class Casino(location.SubLocation):
         self.flag = False
 
     def enter(self):
-        announce("You walk into a casino that looks more like someone's parlor room. ")    
+        announce("You walk into a casino that looks more like someone's parlor room. \n You can gamble, cashout, or talk with the dealer")    
 
     def process_verb (self,verb,cmd_list, nouns):
         if verb == "town":
@@ -71,7 +71,7 @@ class Store(location.SubLocation):
         self.flag = False
 
     def enter(self):
-        announce("A friendly looking clerk greets you as you enter the general store. ")
+        announce("A friendly looking clerk greets you as you enter the general store. You can buy or sell your goods here.")
 
     def process_verb (self,verb,cmd_list, nouns):
         if verb == "town":

@@ -32,4 +32,4 @@ class Tiger(combat.Monster):
         attacks["claw"] = ["claws",random.randrange(50,60), (5,10)]
         attacks["bite"] = ["bites",random.randrange(20,40), (10,15)]
         #7 to 19 hp, bite attack, 65 to 85 speed (100 is "normal")
-        super().__init__(name, random.randrange(10,25), attacks, 75 + random.randrange(-10,35))
+        super().__init__(name, random.randrange(25,50), attacks, 75 + random.randrange(-10,35))

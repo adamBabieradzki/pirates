@@ -41,7 +41,7 @@ class SentientPlantType1(combat.Monster):
         attacks["coil"] = ["coils around", random.randrange(20,30), (10,20)]
         attacks["whip"] = ["whips", random.randrange(40,65), (3,10)]
 
-        super().__init__(name, random.randrange(30,50), attacks, 100 + random.randrange(-20,20))
+        super().__init__(name, random.randrange(50,75), attacks, 100 + random.randrange(-20,20))
 
 class SentientPlantType2(combat.Monster):
     def __init__(self,name):

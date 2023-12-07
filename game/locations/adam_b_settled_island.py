@@ -118,7 +118,7 @@ class Town(location.SubLocation):
         self.verbs['tavern'] = self
         #non-go verbs
     def enter(self):
-        announce("You step into town concisting of cobbled roads and small buildings")
+        announce("You step into town concisting of cobbled roads and small buildings\n the buildings include a store, tavern, and casino")
         #check flags from town
         Flags.knowledge_flag = True if self.main_location.locations['casino'].flag else False
         Flags.supply_flag = True if self.check_flags(config.the_player.inventory)[0] else False
@@ -161,7 +161,7 @@ class Beach(location.SubLocation):
         self.fishing = forage.BeachFishing()
 
     def enter(self):
-        announce("You step foot upon a beach, to your north is a jungle")
+        announce("You step foot upon a beach, to your north is a jungle.\nThere should be some things on the beach worth foraging.\nIt looks like there are plentiful fish in the water")
 
     def process_verb(self, verb, cmd_list, nouns):
         if verb == "east" or verb =="west":
@@ -196,7 +196,7 @@ class Jungle(location.SubLocation):
         self.foraging = forage.JungleForage()
 
     def enter(self):
-        announce("You step foot into a dense jungle, any paths north that were once clear are overgrown")
+        announce("You step foot into a dense jungle, any paths north that were once clear are overgrown. Looks like there are a few things worth foraging in here as well.")
 
     def process_verb(self, verb, cmd_list, nouns):
         if verb == "north":
@@ -227,7 +227,7 @@ class Lumber_camp(location.SubLocation):
 
     def enter(self):
         if Flags.quest_flag == False:
-            announce("You make your way through the thck folliage into where the logging camp once was, to your suprise you find moving, sentient plants.\n They turn to face you and strike")
+            announce("You make your way through the thick folliage into where the logging camp once was, to your suprise you find moving, sentient plants.\n They turn to face you and strike")
         elif Flags.quest_flag == True:
             announce("You enter the damaged logging camp, it will take some time before it's operational again.")
 
