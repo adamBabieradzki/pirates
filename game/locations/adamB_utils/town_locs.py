@@ -14,6 +14,7 @@ class Casino(location.SubLocation):
         self.verbs['town'] = self
         self.verbs['talk'] = self
         self.verbs['gamble'] = self
+        self.verbs['cashout'] = self
         self.chips = 0
         self.wincount = 0
         self.flag = False
@@ -36,7 +37,6 @@ class Casino(location.SubLocation):
                         self.chips += 1
                     else:
                         self.chips -= 1
-                    print(self.wincount)
                     if self.wincount >= 5 and self.flag == False:
                         announce("After winning for the 5th time the dealer reveals that the reason there is nobody else at his casino."+
                                  "\nDealer: The truth is no merchants have been ariving at the island because we lost contact with out inland"+
@@ -47,6 +47,14 @@ class Casino(location.SubLocation):
                         break
             else:
                 announce("If you don't have any chips talk to the dealer!")
+        elif verb == "cashout":
+            if self.chips > 0:
+                announce("You sell your chips to the dealer for 10 shillings each")
+                announce(f"You sold {self.chips} chips for {self.chips * 10} shillings",pause=False)
+                config.the_player.shillings += (self.chips * 10)
+                self.chips = 0
+            else:
+                announce("You don't have any chips to cashout with")
         
 
 class Store(location.SubLocation):
@@ -64,11 +72,9 @@ class Store(location.SubLocation):
 
     def enter(self):
         announce("A friendly looking clerk greets you as you enter the general store. ")
-        config.the_player.shillings += 1000 #debug code
 
     def process_verb (self,verb,cmd_list, nouns):
         if verb == "town":
-            announce("You return to town.")
             config.the_player.next_loc = self.main_location.locations["town"]
         elif verb == "buy":
             self.buy_class.buy_sequence()

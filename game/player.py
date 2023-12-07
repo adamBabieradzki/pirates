@@ -30,7 +30,7 @@ class Player (Context):
         self.piscine_dormitory = []
         self.CHARGE_SIZE = 128
         self.powder = self.CHARGE_SIZE*random.randrange(3,7)
-        self.shillings = random.randint(1,50) #starts game with a random amnt of currency
+        self.shillings = 0
         self.inventory = []
         n = random.randrange(2,6)
         for i in range (0,n):

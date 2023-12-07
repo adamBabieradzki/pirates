@@ -13,6 +13,7 @@ class Buy():
 
     def display(self):
         announce(f"Shopkeeper: What would you like to buy?")
+        print(f"Shillings: {config.the_player.shillings}")
         for i, j in self.items.items():
             print(f'{i}: Price {j.getValue()}')        
 
@@ -37,6 +38,7 @@ class Sell():
 
     def display(self):
         print("You can sell: ")
+        print(f'Shillings: {config.the_player.shillings}')
         iterator = 1 
         for i in config.the_player.inventory:
             print(f'{iterator}: {i} for {i.getValue()} shillings')

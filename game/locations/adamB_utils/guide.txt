@@ -1,0 +1,85 @@
+Settled Island Guide by Adam Babieradzki
+
+Here's a breakdown of all commands in each location:
+docks:
+    go north -> goto wharf
+    east/west -> goto beach
+
+wharf:
+    go north -> goto town
+    go south -> goto docks
+    talk [character] -> you can talk to either the merchant or shipwright
+    repair -> you ask the shipwright to fix your ship, he generally says no
+    
+
+beach:
+    go north -> goto jungle
+    go east/west -> goto docks
+    forage -> look for an item on the beach, the more you forage the less likley you are to find anything
+    fish -> fishing minigame, you must type the correct character within 4 seconds to catch the fish
+
+jungle
+    go north -> takes you to the lumber camp, only if the 3 town flags have flipped True
+    go south -> goto beach
+    forage -> same as the beach forage with different items, there are also 2 axes you can find
+    has a tiger and fruit event
+
+lumber camp:
+    boss fight, and flips the quest flag this event triggers
+    go south -> goto jungle
+
+town:
+    has 3 subsublocations the store, where you can  buy and sell items, the tavern where you can talk to people, and the casino where you can play blackjack
+    this location checks the 3 flags to go through the Jungle
+    go store  : takes you to the store
+    go casino : takes you to the casino
+    go tavern : takes you to the tavern
+    go south  : goto wharf
+
+store:
+    go town : goto town
+    buy : opens buying script, you need 150 shillings to buy jungle equipment you can forage or fish to get this cash
+    sell : opens selling script, you can sell any item in your inventory
+
+tavern:
+    go town : return to town
+    talk : default talk
+    talk barkeep: talk with teh barkeep
+    talk foreman: talk with the foreman, must speak with barkeep twice first
+
+casino:
+    go town : return to town
+    talk : talk with the dealer
+    gamble : starts a game of blackjack
+    cashout: sells all your chips for 10 shillings/chips
+
+Walkthrough:
+    arive at the docks
+    go north twice
+    go tavern
+    talk
+    talk barkeep #twice
+    talk foreman #twice
+    go town
+    go casino
+    talk #get 5 chips
+    gamble #you need to win 5 games without running out of chips, you can buy more by talking with the dealer
+    cashout #sell chips for shillings
+    go town
+    go south #twice
+    go east
+    #use fish or forage untill you have enough shillings for jungle equipment at the store
+    go west
+    go north #twice
+    go store
+    sell #use this to sell your foraged goods/fish
+    buy #buy jungle equipment
+    go town 
+    #if you havn't won 5 times at the casino go back and buy chips, win 5 times and all 3 flags should be True
+    go south #twice
+    go east
+    go north
+    go north #win the boss fight, this completes the Island and you're able to loot what's left of the camp
+    
+
+

@@ -7,6 +7,7 @@ import game.locations.adamB_utils.town_locs as shops
 import game.locations.adamB_utils.adams_items as ab_items
 import random
 from game.events.adamB_events import *
+import game.locations.adamB_utils.forage as forage
 
 class Flags:
     knowledge_flag = False
@@ -50,9 +51,13 @@ class Docks (location.SubLocation):
         self.verbs['east'] = self
         self.verbs['south'] = self
         self.event_chance = 0
+        self.first_time = True
 
     def enter(self):
         announce("You step upon the docks")
+        if self.first_time:
+            self.first_time = False
+            announce("If you need help with commands or progression you can find a guide in game/locations/adamB_utils/guide.txt, good luck and have fun !",pause=False)
     
     def process_verb (self,verb,cmd_list, nouns):
         if verb == "south":
@@ -86,17 +91,23 @@ class Wharf (location.SubLocation):
             if len(cmd_list) == 1:
                 announce("You try to talk to nobody?")
             elif cmd_list[1] == "merchant":
-                announce("You try to talk to the merchant")
+                if not Flags.quest_flag:
+                    announce("Merchant: My ship broke down with goods on board but I can't repair it here because of the lack of lumber")
+                else:
+                    announce("Merchant: I heard from the shipwright that I'll be out of here in a few weeks!")
             elif cmd_list[1] == "shipwright":
-                announce("You try to talk to the shipwright")
+                if not Flags.quest_flag:
+                    announce("Shipwright: I havn't been able to repair anything since the lumber camp was run over")
+                else:
+                    announce("Shipwright: I heard you cleared out the camp, thank you so much!")
             else:
                 announce("That person isn't here")
         elif verb == "repair":
             announce("You ask the shipwright to fix your ship")
             if not Flags.quest_flag:
-                announce("Shipwright: I don't have the supplies to fix your ship")
+                announce("Shipwright: I don't have the supplies to fix your ship.")
             else:
-                pass #not implemented yet
+                announce("Shipwright: Your ship doesn't look damaged.")
 
 class Town(location.SubLocation):
     def __init__(self,m):
@@ -106,18 +117,12 @@ class Town(location.SubLocation):
         self.verbs['store'] = self
         self.verbs['tavern'] = self
         #non-go verbs
-        self.verbs['talk'] = self
-        #need to add more stuff here
     def enter(self):
         announce("You step into town concisting of cobbled roads and small buildings")
         #check flags from town
         Flags.knowledge_flag = True if self.main_location.locations['casino'].flag else False
         Flags.supply_flag = True if self.check_flags(config.the_player.inventory)[0] else False
         Flags.map_flag = True if self.check_flags(config.the_player.inventory)[1] else False
-
-        print(f'Supply Flag:  {Flags.supply_flag}')     #debug code
-        print(f'Knowledge Flag: {Flags.knowledge_flag}')#debug code
-        print(f'Map Flag: {Flags.map_flag}') #debug code
 
     def check_flags(self,inv):
         return_list = [False,False]
@@ -152,6 +157,8 @@ class Beach(location.SubLocation):
         #foraging verbs
         self.verbs['fish'] = self
         self.verbs['forage'] = self
+        self.foraging = forage.BeachForage()
+        self.fishing = forage.BeachFishing()
 
     def enter(self):
         announce("You step foot upon a beach, to your north is a jungle")
@@ -162,11 +169,19 @@ class Beach(location.SubLocation):
         elif verb == "north":
             config.the_player.next_loc = self.main_location.locations['jungle']
         elif verb == "fish":
-            pass
-            #this code is for fishing, might be a minigame idk
+            fishy = self.fishing.fish()
+            if fishy != None:
+                announce(f"You caught a {str(fishy)}")
+                config.the_player.inventory.append(fishy)
+            else:
+                announce('You fail to catch the fish') 
         elif verb =="forage":
-            pass
-            #this code is for foraging the beach, source of income, but finite resources available.
+            item = self.foraging.forage()
+            if item != None:
+                announce(f"While foraging the beach you find a {str(item)}")
+                config.the_player.inventory.append(item)
+            else:
+                announce("You foraged on the beach but could not find anything.")
         
 
 class Jungle(location.SubLocation):
@@ -174,58 +189,51 @@ class Jungle(location.SubLocation):
         super().__init__(m)
         self.verbs['north'] = self
         self.verbs['south'] = self
-        self.verbs['shortcut'] = self
         self.verbs['forage'] = self
-        self.event_chance = 100
+        self.event_chance = 60
         self.events.append(jungle_fruit.Fruit())
         self.events.append(animal_encounter.Tiger_fight())
+        self.foraging = forage.JungleForage()
+
     def enter(self):
-        announce("You step foot into a dense jungle, any trace of human activity has been wiped away")
+        announce("You step foot into a dense jungle, any paths north that were once clear are overgrown")
 
     def process_verb(self, verb, cmd_list, nouns):
-        if verb == "shortcut":
-            config.the_player.next_loc = self.main_location.locations['lumber camp']#debug code
         if verb == "north":
             if Flags.knowledge_flag and Flags.map_flag and Flags.supply_flag:
                 config.the_player.next_loc = self.main_location.locations['lumber camp']
             elif Flags.knowledge_flag and Flags.map_flag:
                 announce("You follow the designated trails but the foliage proves to be too challenging, you are forced to turn back before reaching your destination.")
-                event_dice = random.randint(1,10)
-                #implement some events to happen when failing to navigate jungle
             elif Flags.knowledge_flag and Flags.supply_flag:
                 announce("You cut through the folliage in search of the lumber camp but the jungle proves too difficult to navigate and you wander in a big circle.")
-                event_dice = random.randint(1,10)
-                #implement some events to happen when failing to find camp
             else:
                 announce("Your lack of tools and knowledge make it impossible to find the lumber camp.")
-                event_dice = random.randint(1,10)
-                #implement some events to happen when failing to find camp
         elif verb == "south":
             config.the_player.next_loc = self.main_location.locations['beach']
         elif verb == "forage":
-            pass
+            item = self.foraging.forage()
+            if item != None:
+                announce(f"While foraging in the jungle you find a {str(item)}")
+                config.the_player.inventory.append(item)
+            else:
+                announce("You foraged in the jungle but could not find anything.")
+
 class Lumber_camp(location.SubLocation):
     def __init__(self,m):
         super().__init__(m)
         self.verbs['south'] = self
         self.event_chance = 100
-        self.events.append(boss_fight.Boss_Fight())
+        self.events.append(boss_fight.Boss_Fight(self))
 
     def enter(self):
-        if not isinstance(self.events[0],boss_fight.Boss_Fight):
-            self.event_chance = 0
-            Flags.quest_flag = True
-            print("You have completed the quest") #debug code
-        
         if Flags.quest_flag == False:
             announce("You make your way through the thck folliage into where the logging camp once was, to your suprise you find moving, sentient plants.\n They turn to face you and strike")
         elif Flags.quest_flag == True:
             announce("You enter the damaged logging camp, it will take some time before it's operational again.")
 
-    def check_completion(self):
-        if not isinstance(self.events[0], boss_fight.Boss_Fight):
-            Flags.quest_flag = True
-            print("quest flag set") #debug code
+    def mark_complete(self):
+        Flags.quest_flag = True
+        print("")
     def process_verb(self, verb, cmd_list, nouns):
         if verb == "south":
             config.the_player.next_loc = self.main_location.locations['jungle']

@@ -19,9 +19,6 @@ class Casino:
             announce("Dealer: Your pockets seem a little light here are some chips, on the house.")
             self.other.chips = 5
             self.first_time = False
-        elif self.other.flag == True:
-            announce("Dealer: I wish I could tell you where exactly the logging camp is, but I'm just the casino owner "+
-                     "\nmaybe if you spoke with someone who worked there they would be able to tell you.")
         elif self.other.chips == 0 and config.the_player.shillings > 0:
             announce("Dealer: You can by some chips for 10 shillings per chip")
             decision = input("Buy chips? y/n")
@@ -37,6 +34,9 @@ class Casino:
                         self.other.chips += decision2_i
                     else:
                         announce(f"Dealer: You don't have enough for {decision2} chips.") 
+        elif self.other.flag == True:
+            announce("Dealer: I wish I could tell you where exactly the logging camp is, but I'm just the casino owner "+
+                     "\nmaybe if you spoke with someone who worked there they would be able to tell you.")
         else:
             announce("You try to make small talk with the dealer")
             if len(self.popable_list) > 0:

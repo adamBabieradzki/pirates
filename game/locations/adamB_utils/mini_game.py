@@ -97,12 +97,18 @@ class Game:
             elif self.dealer_hand[1] > 21:
                 win_flag = "player"
                 break
+            if self.player_hand == 21:
+                win_flag = "player"
+                break
+            elif self.dealer_hand == 21:
+                win_flag = "dealer"
+                break
             stand = False
             while stand == False:
                 print("Dealer: Hit or Stand")
                 decision = input(": ")
                 while decision not in ["hit","stand","Hit","Stand"]:
-                    input(": ")
+                    decision = input(": ")
                 if decision == "hit":
                     self.draw(1,1)
                     self.printout()
@@ -119,7 +125,7 @@ class Game:
                 if self.dealer_hand[1] > 21:
                     if win_flag == None: win_flag = "player"
                     break
-            if self.player_hand[1] > self.dealer_hand[1]:
+            if self.player_hand[1] >= self.dealer_hand[1]:
                 if win_flag == None: win_flag = "player"
                 break
             else:
