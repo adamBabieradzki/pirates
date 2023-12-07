@@ -3,6 +3,6 @@ __all__ = ["shallow",
 "whirlpool",
 "homeport",
 "PeacefulIsland",
-"settled_island"
+"adam_b_settled_island"
 ]
 
