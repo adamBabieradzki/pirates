@@ -136,10 +136,3 @@ class Game:
         else:
             print("You Lose this hand")
         return win_flag
-
-
-
-if __name__ == "__main__":
-    game1 = Game()
-    game1.play_game()
-    
